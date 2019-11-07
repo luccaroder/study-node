@@ -9,20 +9,24 @@ describe('Controllers: Products', () => {
         price: 100
     }];
 
+    const defaultRequest = {
+        params: {}
+    };
+
     describe('get() products', () => {
         it('should call send with a list of products', () => {
-            const request = {};
             const response = {
                 send: sinon.spy()
             };
             Product.find = sinon.stub();
             Product.find.withArgs({}).resolves(defaultProduct);
             const productsController = new ProductsController(Product);
-            console.log('product_controller', productsController)
-            productsController.get(request, response)
+
+            //return productsController.get(defaultRequest,response)
+            productsController.get(defaultRequest,response)
                 .then(() => {
                     sinon.assert.calledWith(response.send, defaultProduct);
-                })
+                });
         });
 
         it('should return 400 when an error occurs', () => {
@@ -38,6 +42,30 @@ describe('Controllers: Products', () => {
             return productsController.get(request, response).then(() => {
                 sinon.assert.calledWith(response.send, 'Error');
             });
+        });
+    });
+
+    describe('getById()', () => {
+        it('should call send with one product', () => {
+            const fakeId = 'fakeId';
+            const request = {
+                params: {
+                    id: fakeId
+                }
+            };
+            const response = {
+                send: sinon.spy()
+            };
+
+            Product.find = sinon.stub();
+            Product.find.withArgs({ _id: fakeId }).resolves(defaultProduct);
+
+            const productController = new ProductsController(Product);
+
+            return productController.getById(request, response)
+                .then(() => {
+                    sinon.assert.calledWith(response, defaultProduct);
+                });
         });
     });
 });

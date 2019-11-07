@@ -1,7 +1,7 @@
 import Product from '../../../src/models/product';
 
 
-describe('Routes: Products', () => {
+describe('Products Management', () => {
     let request;
 
     before(() => {
@@ -42,6 +42,18 @@ describe('Routes: Products', () => {
                     expect(res.body).to.eql([expectedProduct]);
                     done(err);
                 });
+        });
+
+        context('when an id is specified', done => {
+           it('should to return 200 with one product', done => {
+              request
+                  .get(`/products/${defaultId}`)
+                  .end((err, res) => {
+                      expect(res.statusCode).to.eql(200);
+                      expect(res.body).to.eql([expectedProduct]);
+                      done(err);
+                  });
+           });
         });
     });
 });
